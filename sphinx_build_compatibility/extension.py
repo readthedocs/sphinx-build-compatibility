@@ -8,7 +8,11 @@ logger = logging.getLogger(__name__)
 
 # https://www.sphinx-doc.org/en/stable/extdev/appapi.html#event-html-page-context
 def manipulate_config(app, config):
-    logger.info('Running "manipulate_config" from Read the Docs "sphinx_build_compatibility" extension.')
+    logger.info(
+        'Running "manipulate_config" from Read the Docs "sphinx_build_compatibility" extension. '
+        'Consider removing it from your requirements and migrating your documentation accordingly. '
+        'This extension is useful only as a transition but it will not be maintained.'
+    )
 
     # Add Read the Docs' static path.
     # Add to the end because it overwrites previous files.
