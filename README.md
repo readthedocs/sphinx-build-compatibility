@@ -1,4 +1,4 @@
-# Sphinx extension to keep old Read the Docs behavior
+# Sphinx extension to keep old Read the Docs' build behavior
 
 Read the Docs used to manipulate the Sphinx's `conf.py` file to:
 
@@ -9,8 +9,18 @@ Read the Docs used to manipulate the Sphinx's `conf.py` file to:
 Since Read the Docs has deprecated this behavior and new projects are not getting it,
 they can still opt-in by manually installing this extension.
 
+## Installation
+
+1. Install the package using `pip`
 ```bash
-pip install readthedocs-sphinx-compatibility
+pip install git+https://github.com/readthedocs/sphinx-build-compatibility#egg=sphinx-build-compatibility
+```
+1. Add the extension in your Sphinx's `conf.py` file:
+```python
+extensions = [
+  # ... other extensions
+  "sphinx_build_compatibility.extension",
+]
 ```
 
 ## Reference
