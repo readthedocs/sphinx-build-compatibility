@@ -31,9 +31,10 @@ def manipulate_config(app, config):
         ).strip("/")
     conf_py_path += "/"
 
-    github_user, github_repo = get_github_username_repo(os.environ.get("READTHEDOCS_GIT_CLONE_URL"))
-    bitbucket_user, bitbucket_repo = get_bitbucket_username_repo(os.environ.get("READTHEDOCS_GIT_CLONE_URL"))
-    gitlab_user, gitlab_repo = get_gitlab_username_repo(os.environ.get("READTHEDOCS_GIT_CLONE_URL"))
+    git_clone_url = os.environ.get("READTHEDOCS_GIT_CLONE_URL")
+    github_user, github_repo = get_github_username_repo(git_clone_url)
+    bitbucket_user, bitbucket_repo = get_bitbucket_username_repo(git_clone_url)
+    gitlab_user, gitlab_repo = get_gitlab_username_repo(git_clone_url)
 
     project_slug = os.environ.get("READTHEDOCS_PROJECT")
     version_slug = os.environ.get("READTHEDOCS_VERSION")
