@@ -38,12 +38,13 @@ def manipulate_config(app, config):
 
     project_slug = os.environ.get("READTHEDOCS_PROJECT")
     version_slug = os.environ.get("READTHEDOCS_VERSION")
+    production_domain = os.environ.get("READTHEDOCS_PRODUCTION_DOMAIN", "readthedocs.org")
 
     # We are using APIv2 to pull active versions, downloads and subprojects
     # because APIv3 requires a token.
     try:
         response_versions = requests.get(
-            f"https://readthedocs.org/api/v2/version/?project__slug={project_slug}&active=true",
+            f"https://{production_domain}/api/v2/version/?project__slug={project_slug}&active=true",
             timeout=2,
         ).json()
         versions = [
@@ -75,7 +76,7 @@ def manipulate_config(app, config):
     try:
         subprojects = []
         response_project = requests.get(
-            f"https://readthedocs.org/api/v2/project/?slug={project_slug}",
+            f"https://{production_domain}/api/v2/project/?slug={project_slug}",
             timeout=2,
         ).json()
         project_id = response_project["results"][0]["id"]
@@ -108,9 +109,9 @@ def manipulate_config(app, config):
         #
         # 'MEDIA_URL': "{{ settings.MEDIA_URL }}",
         # 'STATIC_URL': "{{ settings.STATIC_URL }}",
-        # 'PRODUCTION_DOMAIN': "{{ settings.PRODUCTION_DOMAIN }}",
         # 'proxied_static_path': "{{ proxied_static_path }}",
 
+        'PRODUCTION_DOMAIN': production_domain,
         'versions': versions,
         "downloads": downloads,
         "subprojects": subprojects,
