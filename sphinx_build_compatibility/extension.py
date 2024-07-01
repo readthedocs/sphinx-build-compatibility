@@ -35,11 +35,70 @@ def manipulate_config(app, config):
     bitbucket_user, bitbucket_repo = get_bitbucket_username_repo(os.environ.get("READTHEDOCS_GIT_CLONE_URL"))
     gitlab_user, gitlab_repo = get_gitlab_username_repo(os.environ.get("READTHEDOCS_GIT_CLONE_URL"))
 
+    project_slug = os.environ.get("READTHEDOCS_PROJECT")
+    version_slug = os.environ.get("READTHEDOCS_VERSION")
+
+    # We are using APIv2 to pull active versions, downloads and subprojects
+    # because APIv3 requires a token.
+    try:
+        response_versions = requests.get(
+            f"https://readthedocs.org/api/v2/version/?project__slug={project_slug}&active=true",
+            timeout=2,
+        ).json()
+        versions = [
+            (version["slug"], f"/{version['project']['language']}/{version['slug']}/")
+            for version in response_versions["results"]
+        ]
+    except Exception:
+        logger.info("An error ocurred when hitting API to fetch active versions. Defaulting to an empty list.")
+        versions = []
+
+
+    try:
+        downloads = []
+        for version in response_versions["results"]:
+            if version["slug"] != version_slug:
+                continue
+
+            for key, value in version["downloads"]:
+                downloads.append(
+                    (
+                        key,
+                        value,
+                    ),
+                )
+    except Exception:
+        logger.info("An error ocurred when generating the list of downloads. Defaulting to an empty list.")
+        downloads = []
+
+    try:
+        subprojects = []
+        response_project = requests.get(
+            f"https://readthedocs.org/api/v2/project/?slug={project_slug}",
+            timeout=2,
+        ).json()
+        project_id = response_project["results"][0]["id"]
+
+        response_subprojects = requests.get(
+            f"https://readthedocs.org/api/v2/project/{project_id}/subprojects/",
+            timeout=2,
+        ).json()
+        for subproject in response_subprojects["subprojects"]:
+            subprojects.append(
+                (
+                    subproject["slug"],
+                    subproject["canonical_url"],
+                ),
+            )
+    except Exception:
+        logger.info("An error ocurred when hitting API to fetch project/subprojects. Defaulting to an empty list.")
+        subprojects = []
+
     # Add project information to the template context.
     context = {
         'html_theme': config.html_theme,
         'current_version': os.environ.get("READTHEDOCS_VERSION_NAME"),
-        'version_slug': os.environ.get("READTHEDOCS_VERSION"),
+        'version_slug': version_slug,
 
         # NOTE: these are used to dump them in some JS files and to build the URLs in flyout.
         # However, we are replacing them with the new Addons.
@@ -51,23 +110,11 @@ def manipulate_config(app, config):
         # 'PRODUCTION_DOMAIN': "{{ settings.PRODUCTION_DOMAIN }}",
         # 'proxied_static_path': "{{ proxied_static_path }}",
 
-        # TODO: use the APIv3 to get this data.
-        # Maybe the `/_/addons/` because it has everything we need in just one call.
-        #
-        # 'versions': [{% for version in versions %}
-        # ("{{ version.slug }}", "/{{ version.project.language }}/{{ version.slug}}/"),{% endfor %}
-        # ],
-        # 'downloads': [ {% for key, val in downloads.items %}
-        # ("{{ key }}", "{{ val }}"),{% endfor %}
-        # ],
-        # 'subprojects': [ {% for slug, url in subproject_urls %}
-        #     ("{{ slug }}", "{{ url }}"),{% endfor %}
-        # ],
-        "versions": [],
-        "downloads": [],
-        "subprojects": [],
+        'versions': versions,
+        "downloads": downloads,
+        "subprojects": subprojects,
 
-        'slug': os.environ.get("READTHEDOCS_PROJECT"),
+        'slug': project_slug,
         'rtd_language': os.environ.get("READTHEDOCS_LANGUAGE"),
         'canonical_url': os.environ.get("READTHEDOCS_CANONICAL_URL"),
 
