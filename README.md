@@ -11,11 +11,12 @@ they can still opt-in by manually installing this extension.
 
 ## Installation
 
-1. Install the package using `pip`
+#. Install the package using `pip`
 ```bash
 pip install git+https://github.com/readthedocs/sphinx-build-compatibility#egg=sphinx-build-compatibility
 ```
-1. Add the extension in your Sphinx's `conf.py` file:
+
+#. Add the extension in your Sphinx's `conf.py` file:
 ```python
 extensions = [
   # ... other extensions
