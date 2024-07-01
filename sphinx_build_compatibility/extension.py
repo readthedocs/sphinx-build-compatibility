@@ -27,7 +27,7 @@ def manipulate_config(app, config):
     conf_py_path = "/"
     conf_py_path += os.path.relpath(
             str(app.srcdir),
-            os.getcwd(),
+            os.environ.get("READTHEDOCS_REPOSITORY_PATH"),
         ).strip("/")
     conf_py_path += "/"
 
