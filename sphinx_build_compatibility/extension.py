@@ -33,7 +33,7 @@ def inject_context(app, pagename, templatename, context, doctree):
 
     # Add project information to the template context.
     context = {
-        'html_theme': html_theme,
+        'html_theme': app.config.html_theme,
         'current_version': os.environ.get("READTHEDOCS_VERSION_NAME"),
         'version_slug': os.environ.get("READTHEDOCS_VERSION"),
 
@@ -91,8 +91,8 @@ def inject_context(app, pagename, templatename, context, doctree):
         'gitlab_version': os.environ.get("READTHEDOCS_GIT_IDENTIFIER"),
         'display_gitlab': gitlab_user is not None,
         'READTHEDOCS': True,
-        'using_theme': (html_theme == "default"),
-        'new_theme': (html_theme == "sphinx_rtd_theme"),
+        'using_theme': (app.config.html_theme == "default"),
+        'new_theme': (app.config.html_theme == "sphinx_rtd_theme"),
         'source_suffix': ".rst",
         'ad_free': False,
         'docsearch_disabled': False,
