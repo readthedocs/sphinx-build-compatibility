@@ -2,10 +2,14 @@ import os
 from sphinx import version_info
 from . import __version__
 from .utils import get_github_username_repo, get_bitbucket_username_repo, get_gitlab_username_repo
+from sphinx.util import logging
+logger = logging.getLogger(__name__)
 
 
 # https://www.sphinx-doc.org/en/stable/extdev/appapi.html#event-html-page-context
 def manipulate_config(app, config):
+    logger.info('Running "manipulate_config" from Read the Docs "sphinx_build_compatibility" extension.')
+
     # Add Read the Docs' static path.
     # Add to the end because it overwrites previous files.
     if not hasattr(config, "html_static_path"):
