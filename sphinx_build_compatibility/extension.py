@@ -60,7 +60,10 @@ def manipulate_config(app, config):
             for version in response_versions["results"]
         ]
     except Exception:
-        logger.warning("An error ocurred when hitting API to fetch active versions. Defaulting to an empty list.")
+        logger.warning(
+            "An error ocurred when hitting API to fetch active versions. Defaulting to an empty list.",
+            exc_info=True,
+        )
         versions = []
 
 
@@ -78,7 +81,10 @@ def manipulate_config(app, config):
                     ),
                 )
     except Exception:
-        logger.warning("An error ocurred when generating the list of downloads. Defaulting to an empty list.")
+        logger.warning(
+            "An error ocurred when generating the list of downloads. Defaulting to an empty list.",
+            exc_info=True,
+        )
         downloads = []
 
     try:
@@ -101,7 +107,10 @@ def manipulate_config(app, config):
                 ),
             )
     except Exception:
-        logger.warning("An error ocurred when hitting API to fetch project/subprojects. Defaulting to an empty list.")
+        logger.warning(
+            "An error ocurred when hitting API to fetch project/subprojects. Defaulting to an empty list.",
+            exc_info=True,
+        )
         subprojects = []
 
     # Add project information to the template context.
