@@ -1,8 +1,14 @@
 import os
+
 from sphinx import version_info
+from sphinx.util import logging
+
+import requests
+
 from . import __version__
 from .utils import get_github_username_repo, get_bitbucket_username_repo, get_gitlab_username_repo
-from sphinx.util import logging
+
+
 logger = logging.getLogger(__name__)
 
 
