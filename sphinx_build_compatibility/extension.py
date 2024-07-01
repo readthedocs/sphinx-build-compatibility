@@ -54,8 +54,8 @@ def manipulate_config(app, config):
     if production_domain.startswith("devthedocs"):
         scheme = "http"
 
-    breakpoint()
-
+    # Allow build on local development environment with Docker in Docker
+    production_domain = os.environ.get("READTHEDOCS_HOSTIP", production_domain)
 
     # We are using APIv2 to pull active versions, downloads and subprojects
     # because APIv3 requires a token.
