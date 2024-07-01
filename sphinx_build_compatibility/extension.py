@@ -40,11 +40,15 @@ def manipulate_config(app, config):
     version_slug = os.environ.get("READTHEDOCS_VERSION")
     production_domain = os.environ.get("READTHEDOCS_PRODUCTION_DOMAIN", "readthedocs.org")
 
+    scheme = "https"
+    if production_domain.startswith("devthedocs"):
+        scheme = "http"
+
     # We are using APIv2 to pull active versions, downloads and subprojects
     # because APIv3 requires a token.
     try:
         response_versions = requests.get(
-            f"https://{production_domain}/api/v2/version/?project__slug={project_slug}&active=true",
+            f"{scheme}://{production_domain}/api/v2/version/?project__slug={project_slug}&active=true",
             timeout=2,
         ).json()
         versions = [
@@ -76,13 +80,13 @@ def manipulate_config(app, config):
     try:
         subprojects = []
         response_project = requests.get(
-            f"https://{production_domain}/api/v2/project/?slug={project_slug}",
+            f"{scheme}://{production_domain}/api/v2/project/?slug={project_slug}",
             timeout=2,
         ).json()
         project_id = response_project["results"][0]["id"]
 
         response_subprojects = requests.get(
-            f"https://readthedocs.org/api/v2/project/{project_id}/subprojects/",
+            f"{scheme}://readthedocs.org/api/v2/project/{project_id}/subprojects/",
             timeout=2,
         ).json()
         for subproject in response_subprojects["subprojects"]:
