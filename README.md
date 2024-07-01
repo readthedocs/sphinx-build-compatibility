@@ -1,4 +1,4 @@
-# Sphinx extension to keep old Read the Docs' build behavior
+# Keep deprecated Read the Docs' Sphinx build behavior
 
 Read the Docs used to manipulate the Sphinx's `conf.py` file to:
 
