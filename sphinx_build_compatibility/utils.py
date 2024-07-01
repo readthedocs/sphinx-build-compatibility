@@ -1,3 +1,5 @@
+import re
+
 # Borrowed from
 # https://github.com/readthedocs/readthedocs.org/blob/25e697f1ee63828bba65f41d0c8724769d70402f/readthedocs/projects/constants.py#L345-L366
 GITHUB_REGEXS = [
