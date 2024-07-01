@@ -5,19 +5,19 @@ from .utils import get_github_username_repo, get_bitbucket_username_repo, get_gi
 
 
 # https://www.sphinx-doc.org/en/stable/extdev/appapi.html#event-html-page-context
-def inject_context(app, pagename, templatename, context, doctree):
+def manipulate_config(app, config):
     # Add Read the Docs' static path.
     # Add to the end because it overwrites previous files.
-    if not hasattr(app.config, "html_static_path"):
-        app.config.html_static_path = []
+    if not hasattr(config, "html_static_path"):
+        config.html_static_path = []
     if os.path.exists('_static'):
-        app.config.html_static_path.append('_static')
+        config.html_static_path.append('_static')
 
     # Define this variable in case it's not defined by the user.
     # It defaults to `alabaster` which is the default from Sphinx.
     # https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_theme
-    if not hasattr(app.config, "html_theme"):
-        app.config.html_theme = 'alabaster'
+    if not hasattr(config, "html_theme"):
+        config.html_theme = 'alabaster'
 
     # Example: ``/docs/``
     conf_py_path = "/"
@@ -33,7 +33,7 @@ def inject_context(app, pagename, templatename, context, doctree):
 
     # Add project information to the template context.
     context = {
-        'html_theme': app.config.html_theme,
+        'html_theme': config.html_theme,
         'current_version': os.environ.get("READTHEDOCS_VERSION_NAME"),
         'version_slug': os.environ.get("READTHEDOCS_VERSION"),
 
@@ -91,8 +91,8 @@ def inject_context(app, pagename, templatename, context, doctree):
         'gitlab_version': os.environ.get("READTHEDOCS_GIT_IDENTIFIER"),
         'display_gitlab': gitlab_user is not None,
         'READTHEDOCS': True,
-        'using_theme': (app.config.html_theme == "default"),
-        'new_theme': (app.config.html_theme == "sphinx_rtd_theme"),
+        'using_theme': (config.html_theme == "default"),
+        'new_theme': (config.html_theme == "sphinx_rtd_theme"),
         'source_suffix': ".rst",
         'ad_free': False,
         'docsearch_disabled': False,
@@ -108,24 +108,24 @@ def inject_context(app, pagename, templatename, context, doctree):
     # For sphinx >=1.8 we can use html_baseurl to set the canonical URL.
     # https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-html_baseurl
     if version_info >= (1, 8):
-        if not hasattr(app.config, 'html_baseurl'):
-            app.config.html_baseurl = context['canonical_url']
+        if not hasattr(config, 'html_baseurl'):
+            config.html_baseurl = context['canonical_url']
         context['canonical_url'] = None
 
 
-    if hasattr(app.config, 'html_context'):
+    if hasattr(config, 'html_context'):
         for key in context:
-            if key not in app.config.html_context:
-                app.config.html_context[key] = context[key]
+            if key not in config.html_context:
+                config.html_context[key] = context[key]
     else:
-        app.config.html_context = context
+        config.html_context = context
 
     project_language = os.environ.get("READTHEDOCS_LANGUAGE")
 
     # User's Sphinx configurations
-    language_user = app.config.language
-    latex_engine_user = app.config.latex_engine
-    latex_elements_user = app.config.latex_elements
+    language_user = config.language
+    latex_engine_user = config.latex_engine
+    latex_elements_user = config.latex_elements
 
     # Remove this once xindy gets installed in Docker image and XINDYOPS
     # env variable is supported
@@ -143,23 +143,23 @@ def inject_context(app, pagename, templatename, context, doctree):
     ])
 
     if chinese:
-        app.config.latex_engine = latex_engine_user or 'xelatex'
+        config.latex_engine = latex_engine_user or 'xelatex'
 
         latex_elements_rtd = {
             'preamble': '\\usepackage[UTF8]{ctex}\n',
         }
-        app.config.latex_elements = latex_elements_user or latex_elements_rtd
+        config.latex_elements = latex_elements_user or latex_elements_rtd
     elif japanese:
-        app.config.latex_engine = latex_engine_user or 'platex'
+        config.latex_engine = latex_engine_user or 'platex'
 
     # Make sure our build directory is always excluded
-    if not hasattr(app.config, "exclude_patterns"):
-        app.config.exclude_patterns = []
-    app.config.exclude_patterns.extend(['_build'])
+    if not hasattr(config, "exclude_patterns"):
+        config.exclude_patterns = []
+    config.exclude_patterns.extend(['_build'])
 
 
 def setup(app):
-    app.connect('html-page-context', inject_context)
+    app.connect('config-inited', manipulate_config)
 
     return {
         'version': __version__,
