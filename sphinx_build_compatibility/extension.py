@@ -54,6 +54,9 @@ def manipulate_config(app, config):
     if production_domain.startswith("devthedocs"):
         scheme = "http"
 
+    breakpoint()
+
+
     # We are using APIv2 to pull active versions, downloads and subprojects
     # because APIv3 requires a token.
     try:
