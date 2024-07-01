@@ -39,7 +39,6 @@ The following variables **are not injected** in the ``html_context``:
 | Variable               | Old value for reference                                                     |
 |------------------------|-----------------------------------------------------------------------------|
 | `MEDIA_URL`            | `https://media.readthedocs.org/`                                            |
-| `PRODUCTION_DOMAIN`    | `readthedocs.org`                                                           |
 | `STATIC_URL`           | `https://assets.readthedocs.org/static/`                                    |
 | `analytics_code`       | `UA-123456`                                                                 |
 | `api_host`             | `https://readthedocs.org`                                                   |
