@@ -26,7 +26,7 @@ def manipulate_config(app, config):
     # Example: ``/docs/``
     conf_py_path = "/"
     conf_py_path += os.path.relpath(
-            str(app.env.srcdir),
+            str(app.srcdir),
             os.getcwd(),
         ).strip("/")
     conf_py_path += "/"
