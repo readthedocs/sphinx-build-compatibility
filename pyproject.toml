@@ -39,18 +39,7 @@ classifiers = [
     "Topic :: Software Development :: Documentation",
 ]
 
-[project.optional-dependencies]
-test = [
-    "tox",
-]
-
-doc = [
-    "sphinx-rtd-theme",
-    "sphinx-autoapi",
-]
-
 [project.urls]
-Documentation = "https://sphinx-build-compatibility.readthedocs.io/"
 Source = "https://github.com/readthedocs/sphinx-build-compatibility"
 Tracker = "https://github.com/readthedocs/sphinx-build-compatibility/issues"
 
