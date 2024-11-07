@@ -5,7 +5,7 @@
 > _This extension is a temporary workaround to allow authors/theme developers to keep the old build behavior
 > while they perform the required changes in their documentation/themes to not depend on it._
 
-Read the Docs used to manipulate the Sphinx's `conf.py` file to:
+Read the Docs used to manipulate the Sphinx's `conf.py` file to🔄
 
 - Inject different variables into the `html_context`
 - ~~Add some extra JavaScript and CSS files~~ (via [`readthedocs-sphinx-ext`](https://github.com/readthedocs/readthedocs-sphinx-ext) extension)
