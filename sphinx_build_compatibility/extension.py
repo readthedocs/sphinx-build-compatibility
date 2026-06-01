@@ -79,13 +79,7 @@ def manipulate_config(app, config):
             if version["slug"] != version_slug:
                 continue
 
-            for key, value in version["downloads"]:
-                downloads.append(
-                    (
-                        key,
-                        value,
-                    ),
-                )
+            downloads.extend(version["downloads"].items())
     except Exception:
         logger.warning(
             "An error ocurred when generating the list of downloads. Defaulting to an empty list.",
